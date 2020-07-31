@@ -1,13 +1,13 @@
 from __future__ import division
 
 from models import *
-from utils.logger import *
+# from utils.logger import *
 from utils.utils import *
 from utils.datasets import *
 from utils.parse_config import *
 from test import evaluate
 
-from terminaltables import AsciiTable
+# from terminaltables import AsciiTable
 
 import os
 import sys
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     opt = parser.parse_args()
     print(opt)
 
-    logger = Logger("logs")
+    # logger = Logger("logs")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -114,7 +114,7 @@ if __name__ == "__main__":
             #   Log progress
             # ----------------
 
-            log_str = "\n---- [Epoch %d/%d, Batch %d/%d] ----\n" % (epoch, opt.epochs, batch_i, len(dataloader))
+            # log_str = "\n---- [Epoch %d/%d, Batch %d/%d] ----\n" % (epoch, opt.epochs, batch_i, len(dataloader))
 
             metric_table = [["Metrics", *[f"YOLO Layer {i}" for i in range(len(model.yolo_layers))]]]
 
@@ -133,17 +133,17 @@ if __name__ == "__main__":
                         if name != "grid_size":
                             tensorboard_log += [(f"{name}_{j+1}", metric)]
                 tensorboard_log += [("loss", loss.item())]
-                logger.list_of_scalars_summary(tensorboard_log, batches_done)
+                # logger.list_of_scalars_summary(tensorboard_log, batches_done)
 
-            log_str += AsciiTable(metric_table).table
-            log_str += f"\nTotal loss {loss.item()}"
+            # log_str += AsciiTable(metric_table).table
+            # log_str += f"\nTotal loss {loss.item()}"
 
             # Determine approximate time left for epoch
             epoch_batches_left = len(dataloader) - (batch_i + 1)
             time_left = datetime.timedelta(seconds=epoch_batches_left * (time.time() - start_time) / (batch_i + 1))
-            log_str += f"\n---- ETA {time_left}"
+            # log_str += f"\n---- ETA {time_left}"
 
-            print(log_str)
+            # print(log_str)
 
             model.seen += imgs.size(0)
 
@@ -165,13 +165,13 @@ if __name__ == "__main__":
                 ("val_mAP", AP.mean()),
                 ("val_f1", f1.mean()),
             ]
-            logger.list_of_scalars_summary(evaluation_metrics, epoch)
+            # logger.list_of_scalars_summary(evaluation_metrics, epoch)
 
             # Print class APs and mAP
             ap_table = [["Index", "Class name", "AP"]]
             for i, c in enumerate(ap_class):
                 ap_table += [[c, class_names[c], "%.5f" % AP[i]]]
-            print(AsciiTable(ap_table).table)
+            # print(AsciiTable(ap_table).table)
             print(f"---- mAP {AP.mean()}")
 
         if epoch % opt.checkpoint_interval == 0:
