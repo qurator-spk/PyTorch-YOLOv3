@@ -22,11 +22,11 @@ import pandas as pd
 @click.argument('weights_path', type=click.Path(exists=True))
 @click.argument('result_file', type=click.Path())
 # @click.argument('class_path', type=click.Path(exists=True))
-@click.option('--batch_size', type=int, default=128, help="size of the batches")
-@click.option("--img_size", type=int, default=416, help="size of each image dimension")
-@click.option('--n_cpu', type=int, default=4, help="number of cpu threads to use during batch generation")
-@click.option("--conf_thres", type=float, default=0.8, help="object confidence threshold")
-@click.option("--nms_thres", type=float, default=0.4, help="iou threshold for non-maximum suppression")
+@click.option('--batch-size', type=int, default=128, help="size of the batches")
+@click.option("--img-size", type=int, default=416, help="size of each image dimension")
+@click.option('--n-cpu', type=int, default=4, help="number of cpu threads to use during batch generation")
+@click.option("--conf-thres", type=float, default=0.8, help="object confidence threshold")
+@click.option("--nms-thres", type=float, default=0.4, help="iou threshold for non-maximum suppression")
 @click.option('--perform-nms', type=bool, is_flag=True, default=False,
               help="add if you actually want non-maximum supression")
 def cli(image_folder, model_def, weights_path, result_file, batch_size, img_size, n_cpu,
