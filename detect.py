@@ -72,7 +72,7 @@ def cli(image_folder, model_def, weights_path, result_file, batch_size, img_size
                 detections = non_max_suppression(detections, conf_thres, nms_thres)
 
         del input_imgs
-        del input
+        del input_ten
 
         # Save image and detections
         imgs.extend(img_paths)
