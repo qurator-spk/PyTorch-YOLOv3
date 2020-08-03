@@ -59,6 +59,8 @@ def cli(image_folder, model_def, weights_path, result_file, batch_size, img_size
     imgs = []  # Stores image paths
     img_detections = []  # Stores detections for each image index
 
+    results = []
+
     print("\nPerforming object detection:")
     for batch_i, (img_paths, input_imgs) in tqdm(enumerate(dataloader), total=len(dataloader)):
         # Configure input
@@ -66,35 +68,33 @@ def cli(image_folder, model_def, weights_path, result_file, batch_size, img_size
 
         # Get detections
         with torch.no_grad():
-            detections = model(input_ten)
+            imgs_detections = model(input_ten)
 
             if perform_nms:
-                detections = non_max_suppression(detections, conf_thres, nms_thres)
+                imgs_detections = non_max_suppression(imgs_detections, conf_thres, nms_thres)
+
+        for (path, img, detections) in enumerate(zip(img_paths, input_imgs, imgs_detections)):
+
+            # img = np.array(Image.open(path))
+
+            # Draw bounding boxes and labels of detections
+            if detections is not None:
+                # Rescale boxes to original image
+                detections = rescale_boxes(detections, img_size, img.shape[:2])
+
+                for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
+                    box_w = x2 - x1
+                    box_h = y2 - y1
+
+                    results.append((path, x1, y1, box_w, box_h, conf, cls_conf, cls_pred))
 
         del input_imgs
         del input_ten
+        del imgs_detections
 
         # Save image and detections
-        imgs.extend(img_paths)
-        img_detections.extend(detections)
-
-        del detections
-
-    results = []
-    for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
-
-        img = np.array(Image.open(path))
-
-        # Draw bounding boxes and labels of detections
-        if detections is not None:
-            # Rescale boxes to original image
-            detections = rescale_boxes(detections, img_size, img.shape[:2])
-
-            for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
-                box_w = x2 - x1
-                box_h = y2 - y1
-
-                results.append((path, x1, y1, box_w, box_h, conf, cls_conf, cls_pred))
+        # imgs.extend(img_paths)
+        # img_detections.extend(detections)
 
     result = pd.DataFrame(results, columns=['path', 'x', 'y', 'width', 'height', 'conf', 'cls_conf', 'cls_pred'])
 
