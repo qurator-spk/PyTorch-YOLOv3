@@ -62,18 +62,23 @@ def cli(image_folder, model_def, weights_path, result_file, batch_size, img_size
     print("\nPerforming object detection:")
     for batch_i, (img_paths, input_imgs) in tqdm(enumerate(dataloader), total=len(dataloader)):
         # Configure input
-        input_imgs = Variable(input_imgs.type(Tensor))
+        input_ten = Variable(input_imgs.type(Tensor))
 
         # Get detections
         with torch.no_grad():
-            detections = model(input_imgs)
+            detections = model(input_ten)
 
             if perform_nms:
                 detections = non_max_suppression(detections, conf_thres, nms_thres)
 
+        del input_imgs
+        del input
+
         # Save image and detections
         imgs.extend(img_paths)
         img_detections.extend(detections)
+
+        del detections
 
     results = []
     for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
