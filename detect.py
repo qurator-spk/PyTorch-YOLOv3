@@ -73,7 +73,7 @@ def cli(image_folder, model_def, weights_path, result_file, batch_size, img_size
             if perform_nms:
                 imgs_detections = non_max_suppression(imgs_detections, conf_thres, nms_thres)
 
-        for (path, img, detections) in enumerate(zip(img_paths, input_imgs, imgs_detections)):
+        for path, img, detections in zip(img_paths, input_imgs, imgs_detections):
 
             # img = np.array(Image.open(path))
 
