@@ -54,7 +54,7 @@ def cli(image_folder, model_def, weights_path, result_file, batch_size, img_size
     )
 
     # noinspection PyUnresolvedReferences
-    # Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
+    Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
 
     imgs = []  # Stores image paths
     img_detections = []  # Stores detections for each image index
@@ -62,7 +62,7 @@ def cli(image_folder, model_def, weights_path, result_file, batch_size, img_size
     print("\nPerforming object detection:")
     for batch_i, (img_paths, input_imgs) in tqdm(enumerate(dataloader), total=len(dataloader)):
         # Configure input
-        # input_imgs = Variable(input_imgs.type(Tensor))
+        input_imgs = Variable(input_imgs.type(Tensor))
 
         # Get detections
         with torch.no_grad():
