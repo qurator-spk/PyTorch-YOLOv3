@@ -89,8 +89,8 @@ def cli(image_folder, model_def, weights_path, result_file, batch_size, img_size
                 box_w = x2 - x1
                 box_h = y2 - y1
 
-                results.append((x1, y1, box_w, box_h, conf, cls_conf, cls_pred))
+                results.append((path, x1, y1, box_w, box_h, conf, cls_conf, cls_pred))
 
-    result = pd.DataFrame(results, columns=['x', 'y', 'width', 'height', 'conf', 'cls_conf', 'cls_pred'])
+    result = pd.DataFrame(results, columns=['path', 'x', 'y', 'width', 'height', 'conf', 'cls_conf', 'cls_pred'])
 
     result.to_pickle(result_file)
