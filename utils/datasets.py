@@ -45,12 +45,15 @@ class ImageFolder(Dataset):
         img_path = self.files[index % len(self.files)]
         # Extract image as PyTorch tensor
         img = transforms.ToTensor()(Image.open(img_path))
+
+        img_size = np.array(img.shape)
+
         # Pad to square resolution
         img, _ = pad_to_square(img, 0)
         # Resize
         img = resize(img, self.img_size)
 
-        return img_path, img
+        return img_path, img, img_size
 
     def __len__(self):
         return len(self.files)
