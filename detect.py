@@ -99,10 +99,10 @@ def cli(image_folder, model_def, weights_path, result_file, batch_size, img_size
         detections =\
             pd.concat(
                 [pd.DataFrame(
-                    rescale_boxes(dpart[['x1', 'y1', 'x2', 'y2', 'conf']].values,
+                    rescale_boxes(dpart[['x1', 'y1', 'x2', 'y2', 'conf', 'score']].values,
                                   img_size, [dpart.im_width.unique(), dpart.im_height.unique()]),
                     index=len(dpart) * [img_paths[i]],
-                    columns=['x1', 'y1', 'x2', 'y2', 'conf']) for i, dpart in detections.groupby('image')]).\
+                    columns=['x1', 'y1', 'x2', 'y2', 'conf', 'score']) for i, dpart in detections.groupby('image')]).\
                 reset_index().rename(columns={'index': 'path'})
 
         detections['box_w'] = detections.x2 - detections.x1
